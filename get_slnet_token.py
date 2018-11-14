@@ -1,18 +1,19 @@
 #!/usr/bin/python3
 import logging
 import requests
+import argparse
 
 __author__ = "Kosterev Grigoriy <kosterev@starline.ru>"
 __date__ = "13.10.2018"
 
-def slapi_auth(slapi_url, slid_token):
+
+def get_slnet_token(slid_token):
     """
     Авторизация пользователя по токену StarLineID. Токен авторизации предварительно необходимо получить на сервере StarLineID.
-    :param slapi_url:   URL StarLineAPI сервера
     :param slid_token: Токен StarLineID
     :return: Токен пользователя на StarLineAPI
     """
-    url = slapi_url + 'json/v2/auth.slid'
+    url = 'https://developer.starline.ru/json/v2/auth.slid'
     logging.info('execute request: {}'.format(url))
     data = {
         'slid_token': slid_token
@@ -23,8 +24,24 @@ def slapi_auth(slapi_url, slid_token):
     logging.info('response data: {}'.format(response))
     return r.cookies["slnet"]
 
+
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-s", "--slid_token", dest="slidToken", help="StarLineID Token", default="", required=True)
+    args = parser.parse_args()
+    logging.info("slidToken: {}".format(args.slidToken))
+    return args
+
+
+def main():
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+    args = get_args()
+    slnet_token = get_slnet_token(args.slidToken)
+    logging.info('slnet token: {}'.format(slnet_token))
+
+
 if __name__ == "__main__":
     try:
-        slapi_auth()
+        main()
     except Exception as e:
         logging.error(e)

@@ -16,7 +16,7 @@ def get_app_code(app_id, app_secret):
     :param app_secret: Пароль приложения
     :return: Код, необходимый для получения токена приложения
     """
-    url = 'https://id.starline.ru/application/getCode/'
+    url = 'https://id.starline.ru/apiV3/application/getCode/'
     logging.info('execute request: {}'.format(url))
 
     payload = {
@@ -38,14 +38,15 @@ def get_args():
     parser.add_argument("-i", "--appId", dest="appId", help="application identifier", default="", required=True)
     parser.add_argument("-s", "--appSecret", dest="appSecret", help="account secret", default="", required=True)
     args = parser.parse_args()
-    logging.info('appId: {}, appSecret: {}', args.appId, args.appSecret)
+    logging.info('appId: {}, appSecret: {}'.format(args.appId, args.appSecret))
     return args
 
 
 def main():
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     args = get_args()
-    get_app_code(args.appId, args.appSecret)
+    app_code = get_app_code(args.appId, args.appSecret)
+    logging.info('Application code: {}'.format(app_code))
 
 if __name__ == "__main__":
     try:

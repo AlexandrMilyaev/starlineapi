@@ -7,18 +7,17 @@ import argparse
 __author__ = "Kosterev Grigoriy <kosterev@starline.ru>"
 __date__ = "13.10.2018"
 
-def get_app_token(sid_url, app_id, app_secret, app_code):
+def get_app_token(app_id, app_secret, app_code):
     """
     Получение токена приложения для дальнейшей авторизации.
     Время жизни токена приложения - 4 часа.
-    Идентификатор приложения и пароль выдаются контактным лицом СтарЛайн.
-    :param sid_url: URL StarLineID сервера
+    Идентификатор приложения и пароль можно получить на my.starline.ru.
     :param app_id: Идентификатор приложения
     :param app_secret: Пароль приложения
     :param app_code: Код приложения
     :return: Токен приложения
     """
-    url = 'https://id.starline.ru/application/getToken/'
+    url = 'https://id.starline.ru/apiV3/application/getToken/'
     logging.info('execute request: {}'.format(url))
     payload = {
         'appId': app_id,
@@ -37,16 +36,18 @@ def get_app_token(sid_url, app_id, app_secret, app_code):
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--appId", dest="appId", help="application identifier", default="", required=True)
-    parser.add_argument("-s", "--appSecret", dest="appSecret", help="account secret", default="", required=True)
+    parser.add_argument("-s", "--appSecret", dest="appSecret", help="application secret", default="", required=True)
+    parser.add_argument("-c", "--appCode", dest="appCode", help="application code", default="", required=True)
     args = parser.parse_args()
-    logging.info('appId: {}, appSecret: {}', args.appId, args.appSecret)
+    logging.info('appId: {}, appSecret: {}, appCode: {}'.format(args.appId, args.appSecret, args.appCode))
     return args
 
 
 def main():
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     args = get_args()
-    get_app_token();
+    app_token = get_app_token(args.appId, args.appSecret, args.appCode)
+    logging.info('Application token: {}'.format(app_token))
 
 
 if __name__ == "__main__":

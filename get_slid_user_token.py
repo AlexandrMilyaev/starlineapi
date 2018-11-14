@@ -2,11 +2,13 @@
 import logging
 import requests
 import hashlib
+import argparse
 
 __author__ = "Kosterev Grigoriy <kosterev@starline.ru>"
 __date__ = "13.10.2018"
 
-def get_slid_user_token(sid_url, app_token, user_login, user_password):
+
+def get_slid_user_token(app_token, user_login, user_password):
     """
      Аутентификация пользователя по логину и паролю.
      Неверные данные авторизации или слишком частое выполнение запроса авторизации с одного
@@ -20,7 +22,7 @@ def get_slid_user_token(sid_url, app_token, user_login, user_password):
     :param user_password: Пароль пользователя
     :return: Токен, необходимый для работы с данными пользователя. Данный токен потребуется для авторизации на StarLine API сервере.
     """
-    url = sid_url + 'user/login/'
+    url = 'https://id.starline.ru/apiV3/user/login/'
     logging.info('execute request: {}'.format(url))
     payload = {
         'token': app_token
@@ -37,8 +39,26 @@ def get_slid_user_token(sid_url, app_token, user_login, user_password):
         return response['desc']['user_token']
     raise Exception(response)
 
+
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-a", "--appToken", dest="appToken", help="application identification", default="", required=True)
+    parser.add_argument("-l", "--login", dest="login", help="account login", default="", required=True)
+    parser.add_argument("-p", "--password", dest="password", help="account password", default="", required=True)
+    args = parser.parse_args()
+    logging.info("appToken: {}, login: {}, password: {}".format(args.appToken, args.login, args.password))
+    return args
+
+
+def main():
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+    args = get_args()
+    slid_token = get_slid_user_token(args.appToken, args.login, args.password)
+    logging.info('SLID token: {}'.format(slid_token))
+
+
 if __name__ == "__main__":
     try:
-        get_slid_user_token()
+        main()
     except Exception as e:
         logging.error(e)
