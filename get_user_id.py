@@ -8,9 +8,10 @@ __author__ = "Kosterev Grigoriy <kosterev@starline.ru>"
 __date__ = "13.10.2018"
 
 
-def get_slnet_token(slid_token):
+def get_user_id(slid_token):
     """
-    Авторизация пользователя по токену StarLineID. Токен авторизации предварительно необходимо получить на сервере StarLineID.
+    Возвращает user_id. Не злоупотребляйте методом /auth.slid, так как сервер может потребовать каптчу при частых
+    обращениях. Желательно user_id кэшировать.
     :param slid_token: Токен StarLineID
     :return: Токен пользователя на StarLineAPI
     """
@@ -23,9 +24,9 @@ def get_slnet_token(slid_token):
     response = r.json()
     logging.info('response info: {}'.format(r))
     logging.info('response data: {}'.format(response))
-    slnet_token = r.cookies["slnet"]
-    logging.info('slnet token: {}'.format(slnet_token))
-    return slnet_token
+    user_id = response["user_id"]
+    logging.info('user_id: {}'.format(user_id))
+    return user_id
 
 
 def get_args():
@@ -39,7 +40,7 @@ def get_args():
 def main():
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     args = get_args()
-    get_slnet_token(args.slidToken)
+    get_user_id(args.slidToken)
 
 
 if __name__ == "__main__":

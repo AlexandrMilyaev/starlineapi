@@ -29,7 +29,9 @@ def get_app_code(app_id, app_secret):
     logging.info('response info: {}'.format(r))
     logging.info('response data: {}'.format(response))
     if int(response['state']) == 1:
-        return response['desc']['code']
+        app_code = response['desc']['code']
+        logging.info('Application code: {}'.format(app_code))
+        return app_code
     raise Exception(response)
 
 
@@ -45,8 +47,8 @@ def get_args():
 def main():
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     args = get_args()
-    app_code = get_app_code(args.appId, args.appSecret)
-    logging.info('Application code: {}'.format(app_code))
+    get_app_code(args.appId, args.appSecret)
+
 
 if __name__ == "__main__":
     try:

@@ -7,6 +7,7 @@ import argparse
 __author__ = "Kosterev Grigoriy <kosterev@starline.ru>"
 __date__ = "13.10.2018"
 
+
 def get_app_token(app_id, app_secret, app_code):
     """
     Получение токена приложения для дальнейшей авторизации.
@@ -29,7 +30,9 @@ def get_app_token(app_id, app_secret, app_code):
     logging.info('response info: {}'.format(r))
     logging.info('response data: {}'.format(response))
     if int(response['state']) == 1:
-        return response['desc']['token']
+        app_token = response['desc']['token']
+        logging.info('Application token: {}'.format(app_token))
+        return app_token
     raise Exception(response)
 
 
@@ -46,8 +49,7 @@ def get_args():
 def main():
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     args = get_args()
-    app_token = get_app_token(args.appId, args.appSecret, args.appCode)
-    logging.info('Application token: {}'.format(app_token))
+    get_app_token(args.appId, args.appSecret, args.appCode)
 
 
 if __name__ == "__main__":

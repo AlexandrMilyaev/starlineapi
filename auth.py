@@ -14,21 +14,18 @@ __date__ = "13.10.2018"
 def auth(app_id, app_secret, login, password):
     # Получим код приложения
     app_code = get_app_code(app_id, app_secret)
-    logging.info("app code: {}".format(app_code))
 
     # Получим токен приложения. Действителен 4 часа
     app_token = get_app_token(app_id, app_secret, app_code)
-    logging.info("app token: {}".format(app_token))
 
     # Получим slid-токен юзера. Действителен 1 год
     slid_token = get_slid_user_token(app_token, login, password)
-    logging.info("slid token: {}".format(slid_token))
 
     # Пройдем авторизацию на StarLineAPI сервере
     # С полученным токеном можно обращаться к API-метода сервера StarLineAPI
     # Токен действителен 24 часа
     slnet_token = get_slnet_token(slid_token)
-    logging.info('slnet token: {}'.format(slnet_token))
+    return slnet_token
 
 
 def get_args():
@@ -41,10 +38,12 @@ def get_args():
     logging.info('appId: {}, appSecret: {}, login: {}, password: {}'.format(args.appId, args.appSecret, args.login, args.password))
     return args
 
+
 def main():
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     args = get_args()
     auth(args.appId, args.appSecret, args.login, args.password)
+
 
 if __name__ == "__main__":
     try:

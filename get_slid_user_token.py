@@ -36,7 +36,9 @@ def get_slid_user_token(app_token, user_login, user_password):
     logging.info('response info: {}'.format(r))
     logging.info('response data: {}'.format(response))
     if int(response['state']) == 1:
-        return response['desc']['user_token']
+        slid_token = response['desc']['user_token']
+        logging.info('SLID token: {}'.format(slid_token))
+        return slid_token
     raise Exception(response)
 
 
@@ -53,8 +55,7 @@ def get_args():
 def main():
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     args = get_args()
-    slid_token = get_slid_user_token(args.appToken, args.login, args.password)
-    logging.info('SLID token: {}'.format(slid_token))
+    get_slid_user_token(args.appToken, args.login, args.password)
 
 
 if __name__ == "__main__":
