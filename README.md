@@ -13,6 +13,10 @@ python3 get_slnet_token.py -s your_slid_token
 
 python3 auth.py -i your_application_id -s your_application_secret -l your_login -p your_password
 
+python3 get_user_id -s your_slid_token
+
+python3 get_user_info -u your_user_id -s your_slnet_token
+
 Установка:
 
 pip install -r requirements.txt
