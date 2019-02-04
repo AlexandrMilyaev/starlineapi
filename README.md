@@ -18,7 +18,7 @@ python3 get_user_id.py -s your_slid_token
 python3 get_user_info.py -u your_user_id -s your_slnet_token
 
 
-your_login - логин от аккаунта на starline-online
+your_login - логин от аккаунта на starline-online;
 your_password - пароль от аккаунта на starline-online
 
 Установка:
