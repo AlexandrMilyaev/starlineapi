@@ -7,8 +7,8 @@ import argparse
 __author__ = "Kosterev Grigoriy <kosterev@starline.ru>"
 __date__ = "13.10.2018"
 
-
-def get_app_token(app_id, app_secret, app_code):
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+def get_app_token(app_id, app_secret, app_code, output=True):
     """
     Получение токена приложения для дальнейшей авторизации.
     Время жизни токена приложения - 4 часа.
@@ -19,19 +19,22 @@ def get_app_token(app_id, app_secret, app_code):
     :return: Токен приложения
     """
     url = 'https://id.starline.ru/apiV3/application/getToken/'
-    logging.info('execute request: {}'.format(url))
+
     payload = {
         'appId': app_id,
         'secret': hashlib.md5((app_secret + app_code).encode('utf-8')).hexdigest()
     }
     r = requests.get(url, params=payload)
     response = r.json()
-    logging.info('payload: {}'.format(payload))
-    logging.info('response info: {}'.format(r))
-    logging.info('response data: {}'.format(response))
+    if output:
+        logging.info('execute request: {}'.format(url))
+        logging.info('payload: {}'.format(payload))
+        logging.info('response info: {}'.format(r))
+        logging.info('response data: {}'.format(response))
     if int(response['state']) == 1:
         app_token = response['desc']['token']
-        logging.info('Application token: {}'.format(app_token))
+        if output:
+            logging.info('Application token: {}'.format(app_token))
         return app_token
     raise Exception(response)
 
@@ -41,15 +44,21 @@ def get_args():
     parser.add_argument("-i", "--appId", dest="appId", help="application identifier", default="", required=True)
     parser.add_argument("-s", "--appSecret", dest="appSecret", help="application secret", default="", required=True)
     parser.add_argument("-c", "--appCode", dest="appCode", help="application code", default="", required=True)
+    parser.add_argument("-o", "--only", dest="only")
     args = parser.parse_args()
-    logging.info('appId: {}, appSecret: {}, appCode: {}'.format(args.appId, args.appSecret, args.appCode))
+    if args.only is None:
+        logging.info('appId: {}, appSecret: {}, appCode: {}'.format(args.appId, args.appSecret, args.appCode))
     return args
 
 
 def main():
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+
     args = get_args()
-    get_app_token(args.appId, args.appSecret, args.appCode)
+    if args.only is None:
+
+        get_app_token(args.appId, args.appSecret, args.appCode)
+    else:
+        get_app_token(args.appId, args.appSecret, args.appCode, output=False)
 
 
 if __name__ == "__main__":
