@@ -26,7 +26,7 @@ def get_args():
 
 
 args = get_args()
-name_file = f'{args.imei}_{args.date}_{args.hours}_{args.min}_{args.sec}'
+name_file = f'{args.imei}'
 if args.path == '':
     workbook = xls.Workbook(f'./{name_file}.xlsx')
 else:
