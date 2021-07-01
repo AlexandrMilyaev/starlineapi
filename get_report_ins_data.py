@@ -160,6 +160,7 @@ def proc_trip(track: dict):
                 line += 1
     except Exception as e:
         print(e.args)
+        print('Error')
 
 
 def proc_ins(ins_data: dict):
@@ -207,7 +208,7 @@ def device_ways(slnet_token, devise_id: int, begin_track: int, end_track: int, *
     '''
 
     url = "https://prod-mobapp.starline.ru/json/v1/device/{}/ways".format(devise_id)
-    logging.info('execute request: {}'.format(url))
+    # logging.info('execute request: {}'.format(url))
     cookies = "slnet={}".format(slnet_token)
     data = {"begin": begin_track, "end": end_track}
     data.update(kwargs)
@@ -216,8 +217,8 @@ def device_ways(slnet_token, devise_id: int, begin_track: int, end_track: int, *
     response = r.json()
     r.close()
     # logging.info('payload : {}'.format(payload))
-    logging.info('response info: {}'.format(r))
-    logging.info('response data: {}'.format(response))
+    # logging.info('response info: {}'.format(r))
+    # logging.info('response data: {}'.format(response))
     return response
 
 
@@ -253,5 +254,6 @@ def main():
 if __name__ == "__main__":
     try:
         main()
+        print('Ok')
     except Exception as e:
         logging.error(e)
