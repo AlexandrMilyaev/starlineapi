@@ -173,7 +173,7 @@ def proc_ins(ins_data: dict):
     for ins_ in ins_data['way']:
         if ins_['type'] == 'TRACK':
             for nodes in ins_['nodes']:
-                print(nodes)
+
                 try:
                     data = nodes['ins_data']
 
@@ -211,7 +211,7 @@ def device_ways(slnet_token, devise_id: int, begin_track: int, end_track: int, *
     cookies = "slnet={}".format(slnet_token)
     data = {"begin": begin_track, "end": end_track}
     data.update(kwargs)
-    print(data)
+
     r = requests.post(url, headers={"Cookie": cookies}, json=data)
     response = r.json()
     r.close()
