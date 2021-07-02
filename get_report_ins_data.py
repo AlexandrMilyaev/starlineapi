@@ -5,6 +5,7 @@ import time
 import datetime as dt
 import requests
 import xlsxwriter as xls
+import pytz
 
 __author__ = "Milyaev Aleksandr <milyaev.alexandr@aac-kharkov.com>"
 __date__ = "29.06.2021"
@@ -45,6 +46,8 @@ format_km.set_num_format('#,##0"км"')
 format_km_h = workbook.add_format()
 format_km_h.set_num_format('#,##0"км/ч"')
 
+tz = pytz.timezone("Europe/Kiev")
+tz_offset = tz.utcoffset(dt.datetime.now()).total_seconds()
 
 def proc_statistic(name_object: str, time_begin: str, time_end: str,
                    track: dict):
@@ -141,10 +144,10 @@ def proc_trip(track: dict):
                 end = f'{weys["nodes"][-1]["x"]}, {weys["nodes"][-1]["y"]}'
                 trips.write(line, trips_columns.index('Конечное положение'), end)
                 ts = weys["nodes"][0]["t"]
-                ts = dt.datetime.utcfromtimestamp(ts - time.altzone).strftime('%Y-%m-%d %H:%M:%S')
+                ts = dt.datetime.utcfromtimestamp(ts - tz_offset).strftime('%Y-%m-%d %H:%M:%S')
                 trips.write(line, trips_columns.index('Начало поездки'), ts)
                 te = weys["nodes"][-1]["t"]
-                te = dt.datetime.utcfromtimestamp(te - time.altzone).strftime('%Y-%m-%d %H:%M:%S')
+                te = dt.datetime.utcfromtimestamp(te - tz_offset).strftime('%Y-%m-%d %H:%M:%S')
                 trips.write(line, trips_columns.index('Конец поездки'), te)
                 avr_speed = weys['mileage'] / weys['moving_time'] * 3.6
                 trips.write(line, trips_columns.index('Средняя скорость'), avr_speed, format_km_h)
@@ -188,7 +191,7 @@ def proc_ins(ins_data: dict):
                     ins.write(line, ins_columns.index('Тип нарушения'), it)
                     ts = nodes['t']
 
-                    ts = dt.datetime.utcfromtimestamp(ts - time.altzone).strftime('%Y-%m-%d %H:%M:%S')
+                    ts = dt.datetime.utcfromtimestamp(ts - tz_offset).strftime('%Y-%m-%d %H:%M:%S')
                     ins.write(line, ins_columns.index('Время нарушения'), ts)
                     coord = f'{nodes["x"]}, {nodes["y"]}'
                     ins.write(line, ins_columns.index('Координаты нарушения'), coord)
@@ -235,8 +238,8 @@ def create_report(slidToken, date, hours, min, sec, imei):
     time_begin_int = int(sec) + int(min) * 60 + int(hours) * 3600
     time_begin_int = time_end_int - time_begin_int
     track = device_ways(slidToken, int(imei), time_begin_int, time_end_int, has_properties=True)
-    time_end_str = dt.datetime.utcfromtimestamp(time_end_int - time.altzone).strftime('%Y-%m-%d %H:%M:%S')
-    time_begin_str = dt.datetime.utcfromtimestamp(time_begin_int - time.altzone).strftime('%Y-%m-%d %H:%M:%S')
+    time_end_str = dt.datetime.utcfromtimestamp(time_end_int - tz_offset).strftime('%Y-%m-%d %H:%M:%S')
+    time_begin_str = dt.datetime.utcfromtimestamp(time_begin_int - tz_offset).strftime('%Y-%m-%d %H:%M:%S')
 
     proc_statistic(f'imei - {imei}', time_begin_str, time_end_str, track)
     proc_trip(track)
