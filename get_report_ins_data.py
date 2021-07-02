@@ -19,6 +19,7 @@ def get_args():
     parser.add_argument("-i", "--imei", dest="imei", help="imei object for report", default="", required=True)
     parser.add_argument("-t", "--slid_token", dest="slidToken", help="StarLineID Token", default="", required=True)
     parser.add_argument("-p", "--path", dest="path", help="path", default="")
+    parser.add_argument("-n", "--file_name", dest="file_name", help="Name of file")
     args = parser.parse_args()
     # logging.info('appId: {}, appSecret: {}, login: {}, password: {}'.format(args.appId, args.appSecret, args.login,
                                                                             # args.password))
@@ -26,7 +27,10 @@ def get_args():
 
 
 args = get_args()
-name_file = f'{args.imei}'
+if args.file_name is None:
+    name_file = f'{args.imei}'
+else:
+    name_file = f'{args.name_file}'
 if args.path == '':
     workbook = xls.Workbook(f'./{name_file}.xlsx')
 else:
