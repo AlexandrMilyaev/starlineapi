@@ -41,7 +41,7 @@ def get_args():
     parser.add_argument("-s", "--appSecret", dest="appSecret", help="application secret", default="", required=True)
     parser.add_argument("-l", "--login", dest="login", help="account login", default="", required=True)
     parser.add_argument("-p", "--password", dest="password", help="account password", default="", required=True)
-    parser.add_argument("-o","--only", dest='only')
+    parser.add_argument("-o", "--only", dest='only')
     args = parser.parse_args()
     if args.only is None:
 

@@ -7,6 +7,8 @@ import requests
 import xlsxwriter as xls
 import pytz
 
+from get_device_data import get_device_data
+
 __author__ = "Milyaev Aleksandr <milyaev.alexandr@aac-kharkov.com>"
 __date__ = "29.06.2021"
 
@@ -31,7 +33,7 @@ args = get_args()
 if args.file_name is None:
     name_file = f'{args.imei}'
 else:
-    name_file = f'{args.name_file}'
+    name_file = f'{args.file_name}'
 if args.path == '':
     workbook = xls.Workbook(f'./{name_file}.xlsx')
 else:
@@ -48,6 +50,12 @@ format_km_h.set_num_format('#,##0"км/ч"')
 
 tz = pytz.timezone("Europe/Kiev")
 tz_offset = tz.utcoffset(dt.datetime.now()).total_seconds()
+
+
+def get_name_device(device_id, slenet_token):
+    data = get_device_data(device_id=device_id, slnet_token=slenet_token)
+    return data['alias']
+
 
 def proc_statistic(name_object: str, time_begin: str, time_end: str,
                    track: dict):
@@ -240,8 +248,8 @@ def create_report(slidToken, date, hours, min, sec, imei):
     track = device_ways(slidToken, int(imei), time_begin_int, time_end_int, has_properties=True)
     time_end_str = dt.datetime.utcfromtimestamp(time_end_int + tz_offset).strftime('%Y-%m-%d %H:%M:%S')
     time_begin_str = dt.datetime.utcfromtimestamp(time_begin_int + tz_offset).strftime('%Y-%m-%d %H:%M:%S')
-
-    proc_statistic(f'imei - {imei}', time_begin_str, time_end_str, track)
+    name_device = get_name_device(device_id=imei, slenet_token=slidToken)
+    proc_statistic(name_device, time_begin_str, time_end_str, track)
     proc_trip(track)
     proc_ins(track)
 
