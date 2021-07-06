@@ -54,7 +54,7 @@ tz_offset = tz.utcoffset(dt.datetime.now()).total_seconds()
 
 def get_name_device(device_id, slenet_token):
     data = get_device_data(device_id=device_id, slnet_token=slenet_token)
-    return data['alias']
+    return data['data']['alias']
 
 
 def proc_statistic(name_object: str, time_begin: str, time_end: str,

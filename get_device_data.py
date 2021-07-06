@@ -13,13 +13,13 @@ def get_device_data(device_id, slnet_token):
     :return: Код, необходимый для получения токена приложения
     """
     url = "https://developer.starline.ru/json/v3/device/{}/data".format(device_id)
-    logging.info('execute request: {}'.format(url))
+    # logging.info('execute request: {}'.format(url))
     cookies = "slnet={}".format(slnet_token)
 
     r = requests.get(url, headers={"Cookie": "slnet=" + slnet_token})
     response = r.json()
-    logging.info('cookies: {}'.format(cookies))
-    logging.info('response info: {}'.format(response))
+    # logging.info('cookies: {}'.format(cookies))
+    # logging.info('response info: {}'.format(response))
     return response
 
 
