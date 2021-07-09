@@ -92,6 +92,7 @@ def proc_statistic(name_object: str, time_begin: str, time_end: str,
             return max(speed)
         except Exception as e:
             print(e.args)
+	    print(track['way'])
             return 0
 
     def avr_speed():
@@ -157,7 +158,10 @@ def proc_trip(track: dict):
                 te = weys["nodes"][-1]["t"]
                 te = dt.datetime.utcfromtimestamp(te + tz_offset).strftime('%Y-%m-%d %H:%M:%S')
                 trips.write(line, trips_columns.index('Конец поездки'), te)
-                avr_speed = weys['mileage'] / weys['moving_time'] * 3.6
+                try:
+                    avr_speed = weys['mileage'] / weys['moving_time'] * 3.6
+                except ZeroDivisionError:
+                    avr_speed = 0
                 trips.write(line, trips_columns.index('Средняя скорость'), avr_speed, format_km_h)
                 max_speed = list()
                 for nodes in weys['nodes']:
