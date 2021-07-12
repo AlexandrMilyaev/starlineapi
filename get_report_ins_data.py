@@ -92,7 +92,7 @@ def proc_statistic(name_object: str, time_begin: str, time_end: str,
             return max(speed)
         except Exception as e:
             print(e.args)
-	    print(track['way'])
+            print(track['way']
             return 0
 
     def avr_speed():
