@@ -88,11 +88,14 @@ def proc_statistic(name_object: str, time_begin: str, time_end: str,
             for data in track['way']:
                 if data['type'] == 'TRACK':
                     for nodes in data['nodes']:
-                        speed.append(nodes['s'])
+                        try:
+                            speed.append(nodes['s'])
+                        except:
+                            pass
             return max(speed)
         except Exception as e:
             print(e.args)
-            print(track['way']
+            print(track['way'])
             return 0
 
     def avr_speed():
@@ -165,7 +168,10 @@ def proc_trip(track: dict):
                 trips.write(line, trips_columns.index('Средняя скорость'), avr_speed, format_km_h)
                 max_speed = list()
                 for nodes in weys['nodes']:
-                    max_speed.append(nodes['s'])
+                    try:
+                        max_speed.append(nodes['s'])
+                    except:
+                        pass
                 trips.write(line, trips_columns.index('Максимальная скорость'), max(max_speed), format_km_h)
                 count_ins = 0
 
@@ -249,7 +255,7 @@ def create_report(slidToken, date, hours, min, sec, imei):
         time_end_int = int(time.time())
     time_begin_int = int(sec) + int(min) * 60 + int(hours) * 3600
     time_begin_int = time_end_int - time_begin_int
-    track = device_ways(slidToken, int(imei), time_begin_int, time_end_int, has_properties=True)
+    track = device_ways(slidToken, int(imei), time_begin_int, time_end_int, has_properties=True, filtering=True)
     time_end_str = dt.datetime.utcfromtimestamp(time_end_int + tz_offset).strftime('%Y-%m-%d %H:%M:%S')
     time_begin_str = dt.datetime.utcfromtimestamp(time_begin_int + tz_offset).strftime('%Y-%m-%d %H:%M:%S')
     name_device = get_name_device(device_id=imei, slenet_token=slidToken)
